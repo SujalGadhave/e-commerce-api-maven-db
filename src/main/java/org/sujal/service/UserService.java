@@ -1,119 +1,138 @@
 package org.sujal.service;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.sujal.common.Dbutils;
-import org.sujal.dto.User;
-import org.sujal.dto.UserRequest;
+import org.springframework.transaction.annotation.Transactional;
+import org.sujal.dao.UsersDao;
+import org.sujal.dto.AddUserRequest;
+import org.sujal.dto.UpdateUserRequest;
 import org.sujal.dto.UserResponse;
+import org.sujal.entity.User;
+
 
 @Component
 public class UserService {
 	
 	@Autowired
-	UserResponse response;
+	private UserResponse response;
 	
 	@Autowired
-	User users;
-
+	private UsersDao usersDao;
+	
 	//	Save user 
-	 public UserResponse addUser(UserRequest request) {
-	        
-	        try {
-	            Dbutils.executeQuery("INSERT INTO users (userId, userName, userEmail, userMobile) "
-	                    + "VALUES ('" + request.getUserId() + "', '" + request.getUserName() + "', '"
-	                    + request.getUserEmail() + "', '" + request.getUserMobile() + "');");
-	            
-	            users.setUserId(request.getUserId());
-	            users.setUserName(request.getUserName());
-	            users.setUserEmail(request.getUserEmail());
-	            users.setUserMobile(request.getUserMobile());
-	            
-	            List<User> userList = new ArrayList<>();
-	            userList.add(users);
-	            response.setUser(userList);
-	            response.setResponseCode("0000");
-	            response.setResponseMessage("User added Successfully....");
-	            
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	            response.setResponseCode("911");
-	            response.setResponseMessage("User added failed....");
-	        }
-
+	public UserResponse addUser(AddUserRequest request) {  
+		
+		List<User> users = new ArrayList<>();
+		
+		User userTable = new User();
+		
+		userTable.setId(request.getUserId());
+		userTable.setUserName(request.getUserName());
+		userTable.setUserEmail(request.getUserEmail());
+		userTable.setUserMobile(request.getUserMobile());
+		userTable.setLoginName(request.getLoginName());
+		userTable.setPassword(request.getPassword());
+		 
+		userTable = usersDao.save(userTable);
+		
+		users.add(userTable);
+		
+		if(userTable != null) {
+		
+			response.setResponseCode("0000");
+			response.setResponseMessage("User added successfully!");
+			response.setUsers(users);
+		 
+			return response;
+		
+		} else {
+			response.setResponseCode("0911");
+			response.setResponseMessage("Something went wrong");
+			
+			return response;
+		}
+		 
+	 }
+	 
+	public UserResponse updateUser(UpdateUserRequest request) {  
+	    List<User> users = usersDao.findByLoginName(request.getLoginName());
+	    
+	    if (users.isEmpty()) {
+	        response.setResponseCode("0911");
+	        response.setResponseMessage("User not found!");
 	        return response;
 	    }
+	    
+	    User userTable = users.get(0);
+	    userTable.setUserName(request.getUserName());
+	    userTable.setUserEmail(request.getUserEmail());
+	    userTable.setUserMobile(request.getUserMobile());
+	    userTable.setPassword(request.getPassword());
+
+	    userTable = usersDao.save(userTable);
+	    
+	    response.setResponseCode("0000");
+	    response.setResponseMessage("User details updated");
+	    response.setUsers(List.of(userTable));
+
+	    return response;
+	}
+
 	 
 //		Search user by name
-	    public UserResponse getUserByFirstName(UserRequest request) throws SQLException {
 
-	        List<User> usersList = new ArrayList<>();
-
-	        ResultSet rs = Dbutils.executeSelectQuery("SELECT * FROM users WHERE userName = '" + request.getUserName() + "';");
-	        
-	        try {
-	        	while (rs.next()) {
-	        		
-	        		users.setUserId(rs.getString(1));
-	        		users.setUserName(rs.getString(2));
-	        		users.setUserEmail(rs.getString(3));
-	        		users.setUserMobile(rs.getString(4));
-	        		usersList.add(users);
-	        		
-	        		response.setUser(usersList);
-	        		response.setResponseCode("0000");
-	        		response.setResponseMessage("User found successfully..!");
-	        	}
-	        }
-	        catch (Exception ex) {
-	    		
-    			response.setResponseCode("911");
-    			response.setResponseMessage("User fetched failed...");
-    		
-    			ex.printStackTrace();
-    		
-    	}
-
-	        return response;
-	    }
-	
-//	    Display user
-	    public UserResponse displayUser() throws SQLException{ 
-	
-	    	List<User> displayUser = new ArrayList<>();
-	    	
-	    	try {
-	    	ResultSet rs = Dbutils.executeSelectQuery("SELECT * FROM users");
+	public UserResponse getUserByFirstName(String firstName) {  
+		List<User> users = usersDao.findByLoginName(firstName);
 		
-	    		while (rs.next()) {
-	    			
-	    			User users = new User();
-	    			
-	    			users.setUserId(rs.getString(1));
-	    			users.setUserName(rs.getString(2));
-	    			users.setUserEmail(rs.getString(3));
-	    			users.setUserMobile(rs.getString(4));
+		if (!users.isEmpty()) {
+			User user = users.get(0);
 
-	    			displayUser.add(users);
-	    		}
-	    		response.setUser(displayUser);
-	    		response.setResponseCode("0000");
-	    		response.setResponseMessage("User fetched");
-	    	}
-	    	catch (Exception ex) {
-	    		
-	    			response.setResponseCode("911");
-	    			response.setResponseMessage("User fetched failed...");
-	    		
-	    			ex.printStackTrace();
-	    		
-	    	}
-        
-        return response; 
+			response.setResponseCode("0000");
+			response.setResponseMessage("User found!");
+
+			// Set user details in response body
+			UpdateUserRequest userRequest = new UpdateUserRequest();
+			userRequest.setUserName(user.getUserName());
+			userRequest.setUserEmail(user.getUserEmail());
+			userRequest.setUserMobile(user.getUserMobile());
+			userRequest.setLoginName(user.getLoginName());
+			userRequest.setPassword(user.getPassword());
+		    
+			response.setUsers(users);
+			return response;
+		  
+		} else {
+			response.setResponseCode("0911");
+			response.setResponseMessage("User not found!");
+			return response;
+		}
 	}
+	
+	
+	public UserResponse displayUser() {
+		
+		response.setResponseCode("0000");
+		response.setResponseMessage("User fetched!");
+		response.setUsers(usersDao.findAll());
+		return response;
+	}
+	
+	@Transactional // Spring boot creates a container to related db operations and treated like one operation (handling exception) 
+	public UserResponse deleteResponse(String loginName) {
+	    int deletedCount = usersDao.deleteByLoginName(loginName);
+	    
+	    if (deletedCount > 0) {
+	        response.setResponseCode("0000");
+	        response.setResponseMessage("User deleted successfully!");
+	    } else {
+	        response.setResponseCode("0911");
+	        response.setResponseMessage("User not found!");
+	    }
+	    
+	    return response;
+	}
+
 }

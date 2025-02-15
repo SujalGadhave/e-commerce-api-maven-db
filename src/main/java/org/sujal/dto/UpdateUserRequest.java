@@ -1,74 +1,49 @@
-package org.sujal.entity;
+package org.sujal.dto;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import org.springframework.stereotype.Component;
 
-@Entity
-@Table(name = "users")
-public class User {
-	
-	@Id
-	private Long id;
-	
-	@Column
+@Component
+public class UpdateUserRequest {
+	private Long userId;
 	private String userName;
-	
-	@Column
 	private String userMobile;
-	
-	@Column
 	private String userEmail;
-	
-	@Column
 	private String loginName;
-	
-	@Column
 	private String password;
 	
-	public Long getId() {
-		return id;
+	public Long getUserId() {
+		return userId;
 	}
-	public void setId(Long id) {
-		this.id = id;
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
 	public String getUserName() {
 		return userName;
 	}
-	
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
-	
 	public String getUserMobile() {
 		return userMobile;
 	}
-	
 	public void setUserMobile(String userMobile) {
 		this.userMobile = userMobile;
 	}
-	
 	public String getUserEmail() {
 		return userEmail;
 	}
-	
 	public void setUserEmail(String userEmail) {
 		this.userEmail = userEmail;
 	}
-	
 	public String getLoginName() {
 		return loginName;
 	}
-
 	public void setLoginName(String loginName) {
 		this.loginName = loginName;
 	}
-
 	public String getPassword() {
 		return password;
 	}
-
 	public void setPassword(String password) {
 		this.password = password;
 	}

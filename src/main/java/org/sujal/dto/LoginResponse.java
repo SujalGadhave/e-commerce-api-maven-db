@@ -1,17 +1,12 @@
 package org.sujal.dto;
 
-import java.util.List;
-
 import org.springframework.stereotype.Component;
-import org.sujal.entity.User;
 
 @Component
-public class UserResponse {
+public class LoginResponse {
+	
 	private String responseCode;
 	private String responseMessage;
-	
-	private List<User> users;
-	
 	public String getResponseCode() {
 		return responseCode;
 	}
@@ -23,11 +18,5 @@ public class UserResponse {
 	}
 	public void setResponseMessage(String responseMessage) {
 		this.responseMessage = responseMessage;
-	}
-	public List<User> getUsers() {
-		return users;
-	}
-	public void setUsers(List<User> users) {
-		this.users = users;
 	}
 }

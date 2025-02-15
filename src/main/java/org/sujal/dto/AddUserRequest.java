@@ -3,16 +3,19 @@ package org.sujal.dto;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UserRequest {
-	private String userId;
+public class AddUserRequest {
+	private Long userId;
 	private String userName;
 	private String userMobile;
 	private String userEmail;
+	private String loginName;
+	private String password;
 	
-	public String getUserId() {
+	
+	public Long getUserId() {
 		return userId;
 	}
-	public void setUserId(String userId) {
+	public void setUserId(Long userId) {
 		this.userId = userId;
 	}
 	public String getUserName() {
@@ -32,5 +35,17 @@ public class UserRequest {
 	}
 	public void setUserEmail(String userEmail) {
 		this.userEmail = userEmail;
+	}
+	public String getLoginName() {
+		return loginName;
+	}
+	public void setLoginName(String loginName) {
+		this.loginName = loginName;
+	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
 	}
 }
