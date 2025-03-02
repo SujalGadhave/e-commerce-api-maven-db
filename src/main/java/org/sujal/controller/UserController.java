@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.sujal.dto.AddUserRequest;
 import org.sujal.dto.UpdateUserRequest;
+import org.sujal.dto.UpdateUserResponse;
 import org.sujal.dto.UserResponse;
 import org.sujal.service.UserService;
 
@@ -26,11 +27,12 @@ public class UserController {
 	}
 	
 	//	Update user
-	@PutMapping(path="/user", produces = {"application/json" , "application/xml"} , consumes = {"application/json" , "application/xml"})
-	public UserResponse updateUser(@RequestBody UpdateUserRequest request) {
-		return userService.updateUser(request);
+	@PutMapping(path="/user/{userName}", produces = {"application/json" , "application/xml"} , consumes = {"application/json" , "application/xml"})
+	public UpdateUserResponse updateUser(@PathVariable String userName , @RequestBody UpdateUserRequest request) {
+		return userService.updateUser(userName,request);
 	}
 	
+	// Delete user
 	@DeleteMapping(path="/user/{loginName}", produces = {"application/json" , "application/xml"})
 	public UserResponse deleteResponse (@PathVariable String loginName) {
 		return userService.deleteResponse(loginName);

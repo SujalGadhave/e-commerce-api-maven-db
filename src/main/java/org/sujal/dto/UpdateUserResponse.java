@@ -1,9 +1,7 @@
 package org.sujal.dto;
 
-import org.springframework.stereotype.Component;
-
-@Component
-public class UserResponse {
+public class UpdateUserResponse {
+	
 	private String responseCode;
 	private String responseMessage;
 	
@@ -12,7 +10,18 @@ public class UserResponse {
 	private String userEmail;
 	private String password;
 	
-	
+	public String getResponseCode() {
+		return responseCode;
+	}
+	public void setResponseCode(String responseCode) {
+		this.responseCode = responseCode;
+	}
+	public String getResponseMessage() {
+		return responseMessage;
+	}
+	public void setResponseMessage(String responseMessage) {
+		this.responseMessage = responseMessage;
+	}
 	public Long getUserId() {
 		return userId;
 	}
@@ -31,7 +40,6 @@ public class UserResponse {
 	public void setUserEmail(String userEmail) {
 		this.userEmail = userEmail;
 	}
-
 	public String getPassword() {
 		return password;
 	}
@@ -39,16 +47,4 @@ public class UserResponse {
 		this.password = password;
 	}
 	
-	public String getResponseCode() {
-		return responseCode;
-	}
-	public void setResponseCode(String responseCode) {
-		this.responseCode = responseCode;
-	}
-	public String getResponseMessage() {
-		return responseMessage;
-	}
-	public void setResponseMessage(String responseMessage) {
-		this.responseMessage = responseMessage;
-	}
 }

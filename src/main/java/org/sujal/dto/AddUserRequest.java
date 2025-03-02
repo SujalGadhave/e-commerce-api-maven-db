@@ -6,9 +6,7 @@ import org.springframework.stereotype.Component;
 public class AddUserRequest {
 	private Long userId;
 	private String userName;
-	private String userMobile;
 	private String userEmail;
-	private String loginName;
 	private String password;
 	
 	
@@ -24,24 +22,13 @@ public class AddUserRequest {
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
-	public String getUserMobile() {
-		return userMobile;
-	}
-	public void setUserMobile(String userMobile) {
-		this.userMobile = userMobile;
-	}
 	public String getUserEmail() {
 		return userEmail;
 	}
 	public void setUserEmail(String userEmail) {
 		this.userEmail = userEmail;
 	}
-	public String getLoginName() {
-		return loginName;
-	}
-	public void setLoginName(String loginName) {
-		this.loginName = loginName;
-	}
+
 	public String getPassword() {
 		return password;
 	}

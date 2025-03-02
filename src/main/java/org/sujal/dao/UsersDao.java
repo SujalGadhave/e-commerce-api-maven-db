@@ -1,7 +1,5 @@
 package org.sujal.dao;
 
-import java.util.List;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.sujal.entity.User;
@@ -9,7 +7,7 @@ import org.sujal.entity.User;
 @Repository
 public interface UsersDao extends JpaRepository<User, Long>{
 	
-	List<User> findByLoginName(String loginName);
+	User findByUserName(String userName);
 	
-	int deleteByLoginName(String loginName);	
+	int deleteByUserName(String userName);	
 }

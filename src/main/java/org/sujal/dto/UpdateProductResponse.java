@@ -1,14 +1,27 @@
 package org.sujal.dto;
 
-import org.springframework.stereotype.Component;
-
-@Component
-public class ProductRequest {
+public class UpdateProductResponse {
+	
+	private String responseCode;
+	private String responseMessage;
+	
 	private Long productId;
 	private String productName;
 	private String productQuantity;
 	private String productPrice;
 	
+	public String getResponseCode() {
+		return responseCode;
+	}
+	public void setResponseCode(String responseCode) {
+		this.responseCode = responseCode;
+	}
+	public String getResponseMessage() {
+		return responseMessage;
+	}
+	public void setResponseMessage(String responseMessage) {
+		this.responseMessage = responseMessage;
+	}
 	public Long getProductId() {
 		return productId;
 	}
@@ -33,4 +46,5 @@ public class ProductRequest {
 	public void setProductPrice(String productPrice) {
 		this.productPrice = productPrice;
 	}
+	
 }

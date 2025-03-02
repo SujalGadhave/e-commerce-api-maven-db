@@ -7,7 +7,11 @@ public class ProductResponse {
 
 	private String responseCode;
 	private String responseMessage;
-	private String request;
+	
+	private Long productId;
+	private String productName;
+	private String productQuantity;
+	private String productPrice;
 	
 	public String getResponseCode() {
 		return responseCode;
@@ -21,11 +25,29 @@ public class ProductResponse {
 	public void setResponseMessage(String responseMessage) {
 		this.responseMessage = responseMessage;
 	}
-	public String getRequest() {
-		return request;
+	public Long getProductId() {
+		return productId;
 	}
-	public void setRequest(String request) {
-		this.request = request;
+	public void setProductId(Long productId) {
+		this.productId = productId;
+	}
+	public String getProductName() {
+		return productName;
+	}
+	public void setProductName(String productName) {
+		this.productName = productName;
+	}
+	public String getProductQuantity() {
+		return productQuantity;
+	}
+	public void setProductQuantity(String productQuantity) {
+		this.productQuantity = productQuantity;
+	}
+	public String getProductPrice() {
+		return productPrice;
+	}
+	public void setProductPrice(String productPrice) {
+		this.productPrice = productPrice;
 	}
 	
 	

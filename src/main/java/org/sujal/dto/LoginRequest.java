@@ -7,6 +7,7 @@ public class LoginRequest {
 
 	private String loginName;
 	private String password;
+	
 	public String getLoginName() {
 		return loginName;
 	}

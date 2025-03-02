@@ -1,21 +1,22 @@
 package org.sujal.service;
 
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.sujal.dto.LoginResponse;
-import org.sujal.entity.User;
+import org.sujal.entity.Login;
 import org.sujal.repository.UserRepo;
 
 @Component
 public class AuthenticationService {
 
-	@Autowired
-	private LoginResponse response;
-	
+
 	@Autowired
 	private UserRepo userRepo;
 	
 	public LoginResponse login(String loginName, String password) {
+		
+		LoginResponse response = new LoginResponse();
 		
 		if(loginName==null || password==null) {
 			response.setResponseCode("0911");
@@ -26,9 +27,9 @@ public class AuthenticationService {
 		
 		try {
 			
-			User userDB = userRepo.findByLoginNameAndPassword(loginName, password);
+			Optional<Login> loginDB = userRepo.findByLoginNameAndPassword(loginName, password);
 			
-			if(null != userDB) {
+			if(loginDB.isPresent()) {
 				response.setResponseCode("0000");
 				response.setResponseMessage("Login successful!");
 				return response;

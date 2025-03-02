@@ -1,7 +1,5 @@
 package org.sujal.service;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -9,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.sujal.dao.UsersDao;
 import org.sujal.dto.AddUserRequest;
 import org.sujal.dto.UpdateUserRequest;
+import org.sujal.dto.UpdateUserResponse;
 import org.sujal.dto.UserResponse;
 import org.sujal.entity.User;
 
@@ -22,29 +21,23 @@ public class UserService {
 	@Autowired
 	private UsersDao usersDao;
 	
+	@Autowired
+	private User userTable;
+	
 	//	Save user 
 	public UserResponse addUser(AddUserRequest request) {  
-		
-		List<User> users = new ArrayList<>();
-		
-		User userTable = new User();
 		
 		userTable.setId(request.getUserId());
 		userTable.setUserName(request.getUserName());
 		userTable.setUserEmail(request.getUserEmail());
-		userTable.setUserMobile(request.getUserMobile());
-		userTable.setLoginName(request.getLoginName());
 		userTable.setPassword(request.getPassword());
 		 
 		userTable = usersDao.save(userTable);
-		
-		users.add(userTable);
 		
 		if(userTable != null) {
 		
 			response.setResponseCode("0000");
 			response.setResponseMessage("User added successfully!");
-			response.setUsers(users);
 		 
 			return response;
 		
@@ -57,51 +50,51 @@ public class UserService {
 		 
 	 }
 	 
-	public UserResponse updateUser(UpdateUserRequest request) {  
-	    List<User> users = usersDao.findByLoginName(request.getLoginName());
+	public UpdateUserResponse updateUser(String userName,UpdateUserRequest request) {  
+	 
+		User users = usersDao.findByUserName(userName);
 	    
-	    if (users.isEmpty()) {
-	        response.setResponseCode("0911");
-	        response.setResponseMessage("User not found!");
-	        return response;
-	    }
+		UpdateUserResponse response = new UpdateUserResponse();
+		
+		if(users == null) {
+		   response.setResponseCode("0911");
+           response.setResponseMessage("Product not found!");
+	       return response;
+		}
+		
+		users.setUserName(request.getUserName());
+		users.setUserEmail(request.getUserEmail());
+		users.setPassword(request.getPassword());
+		
+		users = usersDao.save(users);
+		
+		response.setUserId(users.getId());
+		response.setUserName(users.getUserName());
+		response.setUserEmail(users.getUserEmail());
+		response.setPassword(users.getPassword());
+		
+		
+		response.setResponseCode("0000");
+		response.setResponseMessage("User added successfully..!");
 	    
-	    User userTable = users.get(0);
-	    userTable.setUserName(request.getUserName());
-	    userTable.setUserEmail(request.getUserEmail());
-	    userTable.setUserMobile(request.getUserMobile());
-	    userTable.setPassword(request.getPassword());
-
-	    userTable = usersDao.save(userTable);
-	    
-	    response.setResponseCode("0000");
-	    response.setResponseMessage("User details updated");
-	    response.setUsers(List.of(userTable));
-
-	    return response;
+		return response;
 	}
 
 	 
-//		Search user by name
-
+	//	Search user by name
 	public UserResponse getUserByFirstName(String firstName) {  
-		List<User> users = usersDao.findByLoginName(firstName);
+		User users = usersDao.findByUserName(firstName);
 		
-		if (!users.isEmpty()) {
-			User user = users.get(0);
-
+		if (users != null) {
+			
 			response.setResponseCode("0000");
 			response.setResponseMessage("User found!");
-
-			// Set user details in response body
-			UpdateUserRequest userRequest = new UpdateUserRequest();
-			userRequest.setUserName(user.getUserName());
-			userRequest.setUserEmail(user.getUserEmail());
-			userRequest.setUserMobile(user.getUserMobile());
-			userRequest.setLoginName(user.getLoginName());
-			userRequest.setPassword(user.getPassword());
-		    
-			response.setUsers(users);
+			
+			response.setUserId(users.getId());
+			response.setUserName(users.getUserName());
+			response.setUserEmail(users.getUserEmail());
+			response.setPassword(users.getPassword());
+			
 			return response;
 		  
 		} else {
@@ -111,28 +104,28 @@ public class UserService {
 		}
 	}
 	
-	
+	// Display user
 	public UserResponse displayUser() {
 		
 		response.setResponseCode("0000");
 		response.setResponseMessage("User fetched!");
-		response.setUsers(usersDao.findAll());
 		return response;
 	}
 	
+	// Delete user
 	@Transactional // Spring boot creates a container to related db operations and treated like one operation (handling exception) 
-	public UserResponse deleteResponse(String loginName) {
-	    int deletedCount = usersDao.deleteByLoginName(loginName);
+	public UserResponse deleteResponse(String userName) {
+	    
+		int deletedCount = usersDao.deleteByUserName(userName);
 	    
 	    if (deletedCount > 0) {
 	        response.setResponseCode("0000");
 	        response.setResponseMessage("User deleted successfully!");
 	    } else {
 	        response.setResponseCode("0911");
-	        response.setResponseMessage("User not found!");
+	        response.setResponseMessage("Something went wrong!");
 	    }
 	    
 	    return response;
 	}
-
 }
